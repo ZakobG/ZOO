@@ -1,23 +1,44 @@
-@Path("animal")
-public class ZOO {
-    public String[] animals;
+import java.util.HashMap;
+
+@Path("anims")
+@Produces(MediaType.APPLICATION_JSON)
+public class zoologicka {
+
+    static HashMap<Integer, HashMap<String, String>> animals = new HashMap<>();
+    static Integer index = 0;
 
     @GET
-    public Response getanim(@DefaultValue("-2147483648") @FormParam("id") int pos){
-        if (pos == -2147483648)
-            return Response.ok(Arrays.toString(animals)).build();
-        return Response.ok(animals[pos]).build();
+    public Response getAnims(){
+        return Response.ok(animals).build();
     }
-    @PUT
-    public Response addanim(@FormParam("animal") String name, @FormParam("id") int pos){
-        if (animals[pos] != null)
-            return Response.status(400).build();
-        animals[pos] = name;
-        return Response.ok().build();
+    @GET
+    @Path("{index}")
+    public Response getAnim(@PathParam("index") Integer index) {
+        if(index != null && anims.get(index) != null){
+            return Response.ok(anims.get(index)).build();
+        } else {
+            return Response.ok("NOTHING FOUND MATE").build();
+        }
+    }
+    @POST
+    public Response giveBirthToAnAnimal(@FormParam("name") String name, @FormParam("age") String age) {
+        if(name != null && age != null ){
+            HashMap<String,String> newAnim = new HashMap<>();
+            newAnim.put("name", name);
+            newAnim.put("age", age);
+            anims.put(index, newAnim);
+            index++;
+            return Response.ok(animals).build();
+        } else {
+            return Response.ok("WE WANT NAME & AGE").build();
+        }
     }
     @DELETE
-    public Response remanim(@FormParam("id") int pos){
-        animals[pos] = null;
-        return Response.ok().build();
+    @Path("{index}")
+    public Response slaughterAnim(@PathParam("index") Integer index) {
+        if(index != null){
+            anims.remove(index);
+        }
+        return Response.ok(anims).build();
     }
 }
