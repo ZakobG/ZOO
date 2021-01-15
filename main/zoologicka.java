@@ -14,6 +14,7 @@ public class zoologicka {
     public Response getAnims(){
         return Response.ok(animals).build();
     }
+
     @GET
     @Path("{index}")
     public Response getAnim(@PathParam("index") Integer index) {
@@ -31,7 +32,7 @@ public class zoologicka {
             newAnim.put("age", age);
             anims.put(index, newAnim);
             index++;
-            return Response.ok(animals).build();
+            return Response.ok(anims).build();
         } else {
             return Response.ok("WE WANT NAME & AGE").build();
         }
